@@ -1,0 +1,21 @@
+# SUGGESTED mapping from an obligation to the Azentio product module most likely affected.
+# Edit freely: this is a starting point for discussion with product owners, not a statement
+# of how each product is implemented. First matching rule wins (keywords, then business area).
+modules:
+  - module: Amlock
+    description: AML / financial-crime compliance
+    business_areas: [AML]
+    keywords: [money laundering, suspicious, sanctions, KYC, due diligence, terrorist, PEP, screening]
+  - module: Kastle
+    description: Lending and leasing
+    business_areas: [lending]
+    keywords: [loan, lending, borrower, credit, cooling-off, Key Fact Statement, disbursal, repayment]
+  - module: Premia
+    description: Insurance
+    business_areas: [insurance]
+    keywords: [insurer, policyholder, takaful, premium, claims]
+  - module: iMAL
+    description: Core banking (incl. Islamic banking)
+    business_areas: [banking, payments]
+    keywords: [account, deposit, payment, open banking, API, outsourcing, Shari'ah, Islamic]
+default_module: "Cross-cutting (governance)"

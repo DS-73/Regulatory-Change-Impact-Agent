@@ -1,0 +1,18 @@
+Sanctions Screening and AML Transaction Monitoring Policy
+Document: POL-AML-08 · Owner: Compliance · Approved by the Board Risk Committee, June 2026
+[Internal Policy Document for RegWatch Compliance & Impact Mapping Test]
+
+1. Purpose and Scope
+1.1 This Policy defines the mandatory standards for real-time customer sanctions screening, PEP identification, and automated transaction monitoring across all domestic and cross-border banking operations.
+
+2. Sanctions Screening Standards
+2.1 The Bank shall screen all cross-border wire transfers and remittances in real time against the UN Security Council Consolidated List, OFAC, and local regulatory sanctions lists prior to transaction execution.
+2.2 Domestic interbank transactions exceeding 50,000 in local currency shall be subject to post-transaction automated batch screening within 24 hours of settlement.
+2.3 Any true match against a designated terrorist or sanctions entity must result in immediate blocking of the transaction and freezing of the associated funds without prior notice to the customer.
+
+3. Suspicious Activity Reporting
+3.1 Financial Crime Compliance must complete investigation and file a Suspicious Transaction Report (STR) with the national Financial Intelligence Unit within 48 hours of internal alert escalation.
+3.2 Employees are strictly prohibited from tipping off any customer or third party regarding the filing of a suspicious transaction report or internal investigation.
+
+4. Data Retention and Audit Trail
+4.1 The Compliance Department shall retain all customer due diligence files, screening audit logs, and transaction monitoring alerts for a minimum period of 5 years following account closure.

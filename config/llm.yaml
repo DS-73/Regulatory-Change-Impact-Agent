@@ -1,0 +1,25 @@
+# One model for every LLM job: obligation extraction, clause pairing/classification, the Level 2
+# impact mapping and the assistant. Retrieval is TF-IDF, so no embedding model is needed.
+# The provider is chosen with REGWATCH_PROVIDER in .env (groq | openrouter); REGWATCH_MODEL /
+# REGWATCH_FALLBACK_MODEL override the model for the active provider.
+provider: openrouter
+
+providers:
+  groq:
+    url: https://api.groq.com/openai/v1/chat/completions
+    key_env: GROQ_API_KEY
+    model: openai/gpt-oss-120b          # 131K context, strict JSON schema, tool calling, multilingual
+    fallback_model: qwen/qwen3.8-27b    # used only if the primary is rate-limited or unavailable
+    response_mode: json_schema          # Groq supports strict json_schema for these models
+    reasoning_effort: low               # gpt-oss reasons before answering; keep it short to save tokens
+  openrouter:
+    url: https://openrouter.ai/api/v1/chat/completions
+    key_env: OPENROUTER_API_KEY
+    model: google/gemma-4-31b-it:free   # 262K context, tool calling, JSON mode, Arabic + English
+    fallback_model: google/gemma-4-26b-a4b-it:free
+    # The free Gemma endpoints don't support strict json_schema, so a function call whose
+    # parameters ARE the schema is forced ("tools"), falling back to "json_object".
+    response_mode: tools
+
+max_tokens: 4000
+temperature: 0

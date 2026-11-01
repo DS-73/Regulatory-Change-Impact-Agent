@@ -1,0 +1,55 @@
+# Configured regulatory sources. Each has its own adapter in regwatch/adapters/ (one module per regulator).
+# On 403 / timeout / empty parse the adapter falls back to the seeded copies in data/samples/.
+sources:
+  - short_code: SAMA
+    allowed_hosts: [sama.gov.sa]   # SSRF guard: only these hosts (and subdomains) are fetched
+    name: Saudi Central Bank
+    jurisdiction: KSA
+    listing_url: https://sama.gov.sa/en-us/Finance/Pages/Circulars.aspx
+    base_url: https://sama.gov.sa
+    fetch_method: scrape
+    link_selector: "a[href]"
+    link_pattern: "(?i)(circular|\\.pdf)"
+    interval_hours: 24
+    enabled: true
+
+  - short_code: CBUAE
+    allowed_hosts: [centralbank.ae]   # SSRF guard: only these hosts (and subdomains) are fetched
+    name: Central Bank of the UAE
+    jurisdiction: UAE
+    listing_url: https://rulebook.centralbank.ae/en
+    base_url: https://rulebook.centralbank.ae
+    # The rulebook currently answers HTTP 403 to automated clients; the adapter then serves
+    # the seeded CBUAE copies and marks the run "partial". Manual upload also works.
+    fetch_method: scrape
+    link_selector: "a[href]"
+    link_pattern: "(?i)/rulebook/|/notice"
+    interval_hours: 24
+    enabled: true
+
+  - short_code: RBI
+    allowed_hosts: [rbi.org.in]   # SSRF guard: only these hosts (and subdomains) are fetched
+    name: Reserve Bank of India
+    jurisdiction: India
+    listing_url: https://www.rbi.org.in/Scripts/NotificationUser.aspx
+    base_url: https://www.rbi.org.in/Scripts/
+    fetch_method: scrape
+    interval_hours: 12
+    enabled: true
+
+  - short_code: CBN
+    allowed_hosts: [cbn.gov.ng]   # SSRF guard: only these hosts (and subdomains) are fetched
+    name: Central Bank of Nigeria
+    jurisdiction: Nigeria
+    listing_url: https://www.cbn.gov.ng/Documents/circulars.html
+    base_url: https://www.cbn.gov.ng
+    fetch_method: scrape
+    link_selector: "a[href]"
+    link_pattern: "(?i)\\.pdf$"
+    interval_hours: 24
+    enabled: true
+
+# Every fetch is checked against allowed_hosts, must be http(s), must not resolve to a
+# private / loopback address, and is capped at 25 MB.
+# Max new documents downloaded per source per monitoring run (keeps demos fast).
+max_new_per_run: 3

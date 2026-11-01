@@ -1,0 +1,20 @@
+[theme]
+base = "dark"
+primaryColor = "#00B4D8"
+backgroundColor = "#0B0F19"
+secondaryBackgroundColor = "#0F172A"
+textColor = "#E5E9F2"
+font = "sans serif"
+
+[server]
+# Security hardening
+maxUploadSize = 15            # MB, matches REGWATCH_MAX_UPLOAD_MB
+enableXsrfProtection = true
+enableCORS = true
+
+[client]
+showErrorDetails = false      # don't leak stack traces to viewers
+toolbarMode = "minimal"
+
+[browser]
+gatherUsageStats = false
