@@ -8,7 +8,8 @@ A Streamlit app that does four things:
 - **Checks controls**, like a Vanta questionnaire: it asks whether the organisation's existing control set
   already satisfies each new obligation.
 
-Everything is on a filterable dashboard with human review.
+Everything is on a filterable dashboard with human review. See the [Product tour](#product-tour) for
+annotated screenshots of every section.
 
 | Region | Regulator | Live monitoring today | If live fails |
 | --- | --- | --- | --- |
@@ -107,10 +108,124 @@ winget install UB-Mannheim.TesseractOCR
 Each publication records `ocr_used` and `extraction_quality` (good / ocr / low / image_only_no_ocr). When OCR
 isn't available, scanned files are flagged for manual review rather than silently returning nothing.
 
+## Product tour
+
+Screenshots of the running app, one per section of the top navigation. The header (regulator, time range and
+risk filters) and the **Ask RegWatch** button stay visible everywhere; the badge next to the filters shows
+whether the app is in **Mock mode** or **Live**.
+
+### Overview
+
+![RegWatch Overview tab: KPIs, needs-attention list, coverage and recent activity](assets/overview.png)
+
+The landing page answers "what needs my attention right now?".
+
+- **Four KPIs:** circulars tracked, open recommended changes (with a high/medium split and an
+  awaiting-approval count), high-impact amendments, and feed health for the current monitoring run.
+- **Needs attention** lists the highest-priority open items first, with verdict, regulator, clause and due
+  date, so the worst gap is always at the top. Clicking through opens the impact matrix.
+- **Coverage** shows tracked publications per jurisdiction and a **What changed** breakdown: new obligation,
+  modified, withdrawn/superseded, deadline changed, and no reliable match.
+- **Recent activity** is the monitoring log in plain language — which feeds polled live, what was already
+  seen, and which regulator fell back to seeded copies.
+
+### Changes
+
+![RegWatch Changes tab: filterable clause-level diffs with previous and amended text](assets/changes.png)
+
+Every amended publication is broken into individual clause changes, with a filter chip per change type
+(all, new obligation, modified, withdrawn/superseded, deadline changed, no reliable match) and a "show all"
+toggle.
+
+- Each card carries the verdict, the regulator, the clause number and the instrument title, plus a
+  **Review** dropdown to record the human decision.
+- Previous and amended text sit **side by side**, with red/green highlighting, and a plain-language sentence
+  below states what the change actually requires.
+- Because changes are stored per clause, an amending circular records all of its changes rather than a single
+  document-level "changed" flag.
+
+### Impact
+
+![RegWatch Impact tab: filterable impact matrix with gap analysis and recommended actions](assets/impact.png)
+
+The Level 2 impact matrix: obligation → affected policy / process / system / control → gap → draft change →
+owner.
+
+- A counter strip shows how many obligations were assessed and how they split across addressed, partially
+  addressed, no internal control and insufficient evidence.
+- Anything with no owner in the ownership register is flagged for manual assignment rather than guessed —
+  the banner counts them and links to the rows.
+- The matrix is filterable by verdict, priority, workflow state and owner, and exports to Jira-ready CSV.
+- Expanding a row shows the regulatory obligation next to the **existing internal requirement** (quoted
+  verbatim), then *why impacted*, the **gap**, the **recommended action**, the owning area, suggested
+  delivery module and a confidence score.
+
+### Policies
+
+![RegWatch Policies tab: internal repository with document upload and re-mapping](assets/policies.png)
+
+The internal policy and control repository that impact analysis reasons over. The app never connects to a
+device, server or scanner.
+
+- KPI cards summarise policies and SOPs, process documents, systems in inventory and authorised owners.
+- **Add internal documentation** accepts PDF, DOCX, TXT and Markdown up to 15 MB per file, with an optional
+  title, owning department and business area. Submitting runs **Add and re-map obligations**.
+- CSV uploads cover the system/application inventory and the ownership register; the expected columns are
+  listed under the form.
+- **Re-map all obligations** re-runs the mapping after the repository changes, and existing owner and
+  review decisions are preserved.
+
+### Library
+
+![RegWatch Library tab: publication list with obligations, changes, versions and source text](assets/library.png)
+
+The regulatory library itself — every monitoring run and upload lands here.
+
+- The publication table lists regulator, title, reference, publication date, type, open gaps, review state
+  and version.
+- Selecting a publication opens its detail panel with the full title, status, metadata (reference,
+  published/effective dates, type, category) and four actions: **Review**, **Source**, **Raw file** and
+  **Force link**.
+- Sub-views split the record into **Obligations**, **Changes**, **Versions** and **Source text**, and the
+  obligations can be filtered by control-check outcome: all, gap, partial or compliant.
+- Each obligation keeps its clause reference, type (mandatory, prohibition, clarification, definition), due
+  date and control-check verdict, so a reviewer can trace from summary back to the exact source clause.
+
+### Sources
+
+![RegWatch Sources tab: per-regulator feed health, polling controls and document upload](assets/sources.png)
+
+Feed health and ingestion in one place.
+
+- One card per regulator (SAMA, CBUAE, RBI, CBN) with its live / fallback state, polling cadence, languages,
+  last sync time and the result of the most recent fetch.
+- **Poll all**, **Auto-poll due feeds** and a per-regulator **Poll** button run monitoring on demand; anything
+  that fails is retried and then served from seeded copies for that cycle.
+- **Monitoring history** keeps every run with its `ok` / `partial` / `error` status.
+- **Add a document** is the manual path: drop a file or use a sample (CBN AML amendment, SAMA AI circular in
+  Arabic, Open Banking v2), review what RegWatch detected, then add it. Files are validated and duplicates
+  are caught by hash; the OCR status is shown here too.
+
+### Ask RegWatch
+
+![Ask RegWatch dialog: suggested questions and English or Arabic input](assets/ask_ragwatch.png)
+
+A read-only assistant available from every screen via the floating button.
+
+- Answers questions about what changed, which gaps a policy owns, what is due in the next 90 days, or how
+  RegWatch itself works, citing publications and controls.
+- Suggested questions give a one-click starting point; the input accepts **English or Arabic**.
+- Each session is capped by a question counter, and the badge shows whether answers come from the database
+  (mock mode) or the live model.
+- **Take the tour** launches the guided walkthrough of the app.
+
+The companion **AI security** panel is also reachable from every screen (the shield button in the header) and
+has four sub-views: controls, a prompt-injection playground, flagged documents and the LLM audit log.
+
 ## What's in the box
 
 ```text
-app.py                    Streamlit dashboard (7 tabs + sidebar filters)
+app.py                    Streamlit dashboard (6 sections + header filters, assistant and AI-security dialogs)
 config/
   sources.yaml            the 4 sources: URLs, allowed hosts, polling interval
   llm.yaml                model + fallback slug + structured-output mode
@@ -249,7 +364,8 @@ exported as Jira-ready CSV or a per-item ticket.
 | Library | publications, obligations, versions, comparison, force link |
 | Sources | regulator feeds and upload |
 
-The 💬 assistant, the guided tour and the 🛡️ AI-security panel are available on every screen.
+The 💬 **Ask RegWatch** assistant, the guided tour and the 🛡️ AI-security panel are available on every
+screen. See [Product tour](#product-tour) for annotated screenshots of each section.
 
 ## AI / LLM security
 
